@@ -192,6 +192,6 @@ app.post("/postRequest",async(req,resp)=>{
 app.get('/',async(req,resp)=>{
   resp.send("<h1> I am alive </h1>");
 })
-app.listen(process.env.PORT || 3005);
+app.listen(process.env.PORT);
 
 /// Almost all api have been created , looking fwd to integrate it with front end, and register part is also remaining and also , the getPub is sending the username not Agency name 
