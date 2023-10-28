@@ -13,11 +13,12 @@ const pool = mysql.createPool({
 const db=  knex({
     client:'pg',
     connection:{
-      host:'127.0.0.1',
-      user:'postgres',
-      password:'5696',
+      host:'ddks.postgres.database.azure.com',
+      user:'ddks',
+      password:'Bali@123',
       port:'5432',
-      database:'dhruv'
+      database:'dhruv',
+      ssl: true
     }
   })
   app.use(cors());
@@ -188,6 +189,9 @@ app.post("/postRequest",async(req,resp)=>{
   }
   catch(error) {resp.status(500).send("Internal Server Error");}
 })
-app.listen(3005);
+app.get('/',async(req,resp)=>{
+  resp.send("<h1> I am alive </h1>");
+})
+app.listen(process.env.PORT || 3005);
 
 /// Almost all api have been created , looking fwd to integrate it with front end, and register part is also remaining and also , the getPub is sending the username not Agency name 
