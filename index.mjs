@@ -196,7 +196,8 @@ app.get('/',async(req,resp)=>{
 app.get("/user/:username/coords",async(req,resp)=>{
   try{
     let username=req.params.username;
-    let coords=await db.select("AgencyLat","AgencyLong").from('agencies').where({username}).first();
+    let coords=await db.select("lat as AgencyLat","long as AgencyLong").from('agencies').where({username}).first();
+    console.log("YOi");
     resp.send(coords);
   }
   catch(error){
@@ -204,4 +205,4 @@ app.get("/user/:username/coords",async(req,resp)=>{
   }
 })
 /// Almost all api have been created , looking fwd to integrate it with front end, and register part is also remaining and also , the getPub is sending the username not Agency name 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT||3010);
