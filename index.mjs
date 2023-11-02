@@ -56,8 +56,7 @@ const db=  knex({
   
       if (user) {
         let pl=await db("session").where({username}).update({'loggintime':Date.now()});
-        console.log("pl",pl);
-        resp.redirect(`https://example.com/user/${username}`)
+        resp.send("Successful");
       } else {
         resp.status(401).send('Invalid credentials');
       }
@@ -100,10 +99,11 @@ app.get("/user/:username" ,isLoggedIn,(req,resp)=>{
 app.get("/user/:username/info",isLoggedIn,(req,resp)=>{
 
 })
-app.post("/user/:username/requests",isLoggedIn, async (req,resp)=>{
+app.get("/user/:username/requests",isLoggedIn, async (req,resp)=>{
  let username =req.params.username;
  console.log("Here I am");
- let {AgencyLat,AgencyLong}=req.body;
+ const coords=await db.select("AgencyLat","AgencyLong").from('agencies').where({username}).first();
+ let{AgencyLat,AgencyLong}=coords;
  let MAX_DISTANCE=100;
  const requestsWithinDistance = await db
   .select('*')
@@ -135,7 +135,7 @@ app.get("/user/:username/getUpdates",isLoggedIn,async (req,resp)=>{
   let username=req.params.username;
   try{
     let get=await db.select().from("pvtbulletin").where('username','!=',username).whereRaw('date>=CURRENT_DATE-INTERVAL \'7 days \'').orderBy('date','desc').orderBy('time','desc');
-    if(get.length>0) resp.send(get);
+    if(get.length>=0) resp.send(get);
     else resp.status(403).send("Bad Request");
   }
   catch(error){
@@ -190,8 +190,18 @@ app.post("/postRequest",async(req,resp)=>{
   catch(error) {resp.status(500).send("Internal Server Error");}
 })
 app.get('/',async(req,resp)=>{
-  resp.send("<h1> I am alive </h1>");
+  resp.send("<h1> I am alive. </h1>");
 })
-app.listen(process.env.PORT);
 
+app.get("/user/:username/coords",async(req,resp)=>{
+  try{
+    let username=req.params.username;
+    let coords=await db.select("AgencyLat","AgencyLong").from('agencies').where({username}).first();
+    resp.send(coords);
+  }
+  catch(error){
+    resp.status(404).send("Bad Request");
+  }
+})
 /// Almost all api have been created , looking fwd to integrate it with front end, and register part is also remaining and also , the getPub is sending the username not Agency name 
+app.listen(process.env.PORT);
