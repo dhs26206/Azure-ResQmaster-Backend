@@ -206,7 +206,7 @@ app.get("/user/:username/coords",async(req,resp)=>{
 })
 app.get("/user/:username/logout",async(req,resp)=>{
   let username =req.params.username;
-  let coords= await db("session").where({username}).update({"time":0});
+  let coords= await db("session").where({username}).update({"loggintime":0});
   resp.send("Successful");
 })
 /// Almost all api have been created , looking fwd to integrate it with front end, and register part is also remaining and also , the getPub is sending the username not Agency name 
