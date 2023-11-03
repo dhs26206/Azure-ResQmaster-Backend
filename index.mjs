@@ -104,7 +104,7 @@ app.get("/user/:username/requests",isLoggedIn, async (req,resp)=>{
  console.log("Here I am");
  const coords=await db.select("lat as AgencyLat","long as AgencyLong").from('agencies').where({username}).first();
  let{AgencyLat,AgencyLong}=coords;
- let MAX_DISTANCE=100;
+ let MAX_DISTANCE=2000;
  const requestsWithinDistance = await db
   .select('*')
   .from(function() {
