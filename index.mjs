@@ -168,8 +168,9 @@ app.post("/user/:username/postpub",isLoggedIn,async (req,resp)=>{
 })
 app.get("/getPub",async (req,resp)=>{
   try{
-  let list=await db.select("pubbulletin.date","pubbulletin.update_text","agencies.agency_name").from("pubbulletin").join("agencies","pubbulletin.username","=","agencies.username");
+  // let list=await db.select("pubbulletin.date","pubbulletin.update_text","agencies.agency_name").from("pubbulletin").join("agencies","pubbulletin.username","=","agencies.username");
   // console.log(list);
+  let list = await db.select("pubbulletin.date", "pubbulletin.update_text", "agencies.agency_name").from("pubbulletin").join("agencies", "pubbulletin.username", "=", "agencies.username").orderBy("pubbulletin.date", "desc");
   resp.send(list);
   }
   catch(error) {resp.status(500).send("Internal Server Problem");}
