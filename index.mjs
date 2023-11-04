@@ -1,15 +1,15 @@
-import mysql from 'mysql2/promise';
+// import mysql from 'mysql2/promise';
 import express from 'express';
 import knex from 'knex';
 import cors from 'cors';
 const app=express();
-const pool = mysql.createPool({
-    host: 'bntddj26lkwrpkkdvahk-mysql.services.clever-cloud.com',
-    user: 'urkl2bq6tig8zo5n',
-    password: 'CH0bBXMMtUEMimeaqa6e',
-    database: 'bntddj26lkwrpkkdvahk',
-    connectionLimit:4
-  });
+// const pool = mysql.createPool({
+//     host: 'bntddj26lkwrpkkdvahk-mysql.services.clever-cloud.com',
+//     user: 'urkl2bq6tig8zo5n',
+//     password: 'CH0bBXMMtUEMimeaqa6e',
+//     database: 'bntddj26lkwrpkkdvahk',
+//     connectionLimit:4
+//   });
 const db=  knex({
     client:'pg',
     connection:{
@@ -119,7 +119,7 @@ app.get("/user/:username/requests",isLoggedIn, async (req,resp)=>{
 }) 
 app.post("/user/:username/mark",isLoggedIn,async (req,resp)=>{
   let username=req.params.username;
-  console.log("Oh");
+  console.log("Mark Function Triggered");
   let {ReqID,Action}=req.body;
   try{
     let check=await db("requests").where({"requestid":ReqID}).update({"status":"true","action_taken":Action});
@@ -197,7 +197,7 @@ app.get("/user/:username/coords",async(req,resp)=>{
   try{
     let username=req.params.username;
     let coords=await db.select("lat as AgencyLat","long as AgencyLong").from('agencies').where({username}).first();
-    console.log("YOi");
+    console.log(`Coords Accessed of ${username}`);
     resp.send(coords);
   }
   catch(error){
@@ -205,9 +205,14 @@ app.get("/user/:username/coords",async(req,resp)=>{
   }
 })
 app.get("/user/:username/logout",async(req,resp)=>{
-  let username =req.params.username;
+  try
+  {let username =req.params.username;
   let coords= await db("session").where({username}).update({"loggintime":0});
   resp.send("Successful");
+  console.log(`logout ${username}`);}
+  catch(error){
+    resp.status(404).send("Bad Request");
+  }
 })
 /// Almost all api have been created , looking fwd to integrate it with front end, and register part is also remaining and also , the getPub is sending the username not Agency name 
 app.listen(process.env.PORT||3010);
