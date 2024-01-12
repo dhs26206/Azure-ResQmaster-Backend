@@ -215,5 +215,9 @@ app.get("/user/:username/logout",async(req,resp)=>{
     resp.status(404).send("Bad Request");
   }
 })
+app.get("/",async(req,resp)=>{
+    resp.send("I am live");
+})
 /// Almost all api have been created , looking fwd to integrate it with front end, and register part is also remaining and also , the getPub is sending the username not Agency name 
 app.listen(process.env.PORT||3010);
+console.log("App started with port ");
