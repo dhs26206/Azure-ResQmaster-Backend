@@ -15,7 +15,7 @@ const db=  knex({
     connection:{
       host:'ddks.postgres.database.azure.com',
       user:'ddks',
-      password:'Bali@123',
+      password:${{secrets.PASSWORD}},
       port:'5432',
       database:'dhruv',
       ssl: true
